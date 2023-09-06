@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const sendEmail = require("../utils/sendEmail");
+const Email = require("../utils/sendEmail");
 const ApiError = require("../utils/ApiError");
 const User = require("../Model/userModel");
 const { createToken, sendCookieToBrowser } = require("../utils/createToken");
@@ -133,7 +133,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   const message = `Hi,${user.name}\n we received request for reset your password enter your code ${resetCode} thank you to help us to keep your account save`;
   try {
-    await sendEmail({
+    await Email({
       email: user.email,
       subject: "Your reset code valid for (10 mins)",
       message,
