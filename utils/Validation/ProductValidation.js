@@ -49,10 +49,7 @@ exports.createProductValidator = [
         throw new Error("Price After Discount must be lower than old price");
       return true;
     }),
-  check("availableColors")
-    .optional()
-    .isArray()
-    .withMessage("Product must contain more than one color"),
+  check("availableColors").optional(),
   check("images")
     .optional()
     .isArray()
@@ -75,30 +72,18 @@ exports.createProductValidator = [
   check("subcategories")
     .optional()
     .isMongoId()
-    .withMessage("Invalid category id")
-    .custom((val) =>
+    .withMessage("Invalid subCategory id")
+    .custom((subcategoriesIds) =>
       subCategoryModel
-        .find({ _id: { $exists: true, $in: val } })
+        .find({ _id: { $exists: true, $in: subcategoriesIds } })
         .then((result) => {
-          if (result.length < 1 || result.length !== val.length) {
+          if (!Array.isArray(subCategoryModel)) {
+            subcategoriesIds = [subcategoriesIds];
+          }
+          if (result.length < 1 || result.length !== subcategoriesIds.length) {
+            console.log(subcategoriesIds);
             return Promise.reject(new Error("SubCategory id cannot be found"));
           }
-        })
-    )
-    .custom((val, { req }) =>
-      subCategoryModel
-        .find({ category: req.body.category })
-        .then((subCategories) => {
-          // eslint-disable-next-line prefer-const
-          let subCategoriesIdInDb = [];
-          subCategories.forEach((subCategory) =>
-            subCategoriesIdInDb.push(subCategory._id.toString())
-          );
-          const checkValues = val.every((v) => subCategoriesIdInDb.includes(v));
-          if (!checkValues)
-            return Promise.reject(
-              new Error("Some of subCategories not belong to this category")
-            );
         })
     ),
   check("brand").optional().isMongoId().withMessage("Invalid category id"),

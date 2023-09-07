@@ -42,12 +42,13 @@ const ProductModel = new Schema(
     },
     ratingsQuantity: {
       type: Number,
-      min: [1, "Average rating cannot be less than 1"],
-      max: [5, "Average rating cannot be more than 5"],
+      default: 0,
     },
     RatingsAverage: {
       type: Number,
-      default: 0,
+      min: [1, "Average rating cannot be less than 1"],
+      max: [5, "Average rating cannot be more than 5"],
+      default: 1,
     },
     category: {
       type: Schema.ObjectId,
