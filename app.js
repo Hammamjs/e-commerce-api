@@ -29,12 +29,14 @@ const { webhookCheckout } = require("./Services/OrderServices");
 // DataBase
 DataBase();
 
+app.use(cors());
+app.options("*", cors());
+
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cors());
-app.options("*", cors());
+
 
 app.use(compression());
 
