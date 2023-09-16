@@ -20,7 +20,7 @@ const DataBase = require("./DataBase/db");
 const ApiError = require("./utils/ApiError");
 
 // Routes file
-const mount = require('./Routes/index');
+const mount = require("./Routes/index");
 
 const globalErrorMiddleware = require("./Middleware/GlobalMiddleware");
 const { webhookCheckout } = require("./Services/OrderServices");
@@ -29,14 +29,12 @@ const { webhookCheckout } = require("./Services/OrderServices");
 // DataBase
 DataBase();
 
+const app = express();
+
 app.use(cors());
 app.options("*", cors());
 
-const app = express();
-
 app.use(express.urlencoded({ extended: false }));
-
-
 
 app.use(compression());
 
@@ -78,8 +76,8 @@ app.use(
   })
 );
 
- // Mount Route
- mount(app)
+// Mount Route
+mount(app);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Route not Exist ${req.originalUrl}`, 400));
